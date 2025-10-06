@@ -17,6 +17,7 @@ import EnergyPage from "@/pages/energy-page";
 import WellnessPage from "@/pages/wellness-page";
 import CommunicationPage from "@/pages/communication-page";
 import EntertainmentPage from "@/pages/entertainment-page";
+import DataSciencePage from "@/pages/data-science-page";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/wellness" component={WellnessPage} />
       <Route path="/communication" component={CommunicationPage} />
       <Route path="/entertainment" component={EntertainmentPage} />
+      <Route path="/data-science" component={DataSciencePage} />
       <Route component={NotFound} />
     </Switch>
   );

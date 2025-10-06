@@ -18,6 +18,7 @@ import {
   Heart,
   MessageCircle,
   Film,
+  Brain,
 } from "lucide-react";
 
 const menuItems = [
@@ -29,6 +30,7 @@ const menuItems = [
   { title: "Wellness", url: "/wellness", icon: Heart },
   { title: "Communication", url: "/communication", icon: MessageCircle },
   { title: "Entertainment", url: "/entertainment", icon: Film },
+  { title: "Data Science", url: "/data-science", icon: Brain },
 ];
 
 export function AppSidebar() {
