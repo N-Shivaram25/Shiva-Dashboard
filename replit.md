@@ -2,7 +2,18 @@
 
 ## Overview
 
-This is a personal wellness and productivity tracking application that helps users monitor their daily activities across multiple dimensions: goals, tasks, thoughts (both positive and negative), energy levels, wellness activities, communication tasks, and entertainment. The application provides a day-by-day tracking interface with data persistence through localStorage, following a clean, utility-focused design inspired by Notion, Todoist, and Linear.
+This is a personal wellness and productivity tracking application that helps users monitor their daily activities across multiple dimensions: goals, tasks, thoughts (both positive and negative), energy levels, wellness activities, communication tasks, entertainment, and document management. The application provides a day-by-day tracking interface with data persistence, following a clean, utility-focused design inspired by Notion, Todoist, and Linear.
+
+## Recent Changes
+
+**October 8, 2025** - Added comprehensive College Documents management system with:
+- Main Docs dashboard with sections for College Documents, Internships, Certifications, and Links
+- College Documents page with category-based organization (10th Marks, Aadhaar Card, etc.)
+- Internships page with multi-file upload support (offer letters, completion certificates, other files)
+- Certifications page for professional certificates
+- Links page for important document-related URLs
+- File upload/download functionality with base64 encoding
+- Full CRUD operations for all document types
 
 ## User Preferences
 
