@@ -101,6 +101,49 @@ export const dsCertifications = pgTable("ds_certifications", {
   title: text("title").notNull(),
 });
 
+// College Documents tables
+export const collegeDocuments = pgTable("college_documents", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  category: text("category").notNull(), // e.g., "10th Marks", "Aadhaar Card"
+  fileName: text("file_name").notNull(),
+  fileData: text("file_data").notNull(), // base64 encoded file
+  mimeType: text("mime_type").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const internshipDocuments = pgTable("internship_documents", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  internshipName: text("internship_name").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const internshipFiles = pgTable("internship_files", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  internshipId: varchar("internship_id").notNull().references(() => internshipDocuments.id, { onDelete: 'cascade' }),
+  fileType: text("file_type").notNull(), // "offer_letter", "completion_certificate", "other"
+  fileName: text("file_name").notNull(),
+  fileData: text("file_data").notNull(), // base64 encoded file
+  mimeType: text("mime_type").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const certificationDocuments = pgTable("certification_documents", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  fileName: text("file_name").notNull(),
+  fileData: text("file_data").notNull(), // base64 encoded file
+  mimeType: text("mime_type").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const documentLinks = pgTable("document_links", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  url: text("url").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertGoalSchema = createInsertSchema(goals).omit({ id: true });
 export const insertTaskSchema = createInsertSchema(tasks).omit({ id: true });
 export const insertNegativeThoughtSchema = createInsertSchema(negativeThoughts).omit({ id: true });
@@ -116,6 +159,11 @@ export const insertDsaStreakSchema = createInsertSchema(dsaStreak).omit({ id: tr
 export const insertDsTechnologySchema = createInsertSchema(dsTechnologies).omit({ id: true });
 export const insertDsTopicSchema = createInsertSchema(dsTopics).omit({ id: true });
 export const insertDsCertificationSchema = createInsertSchema(dsCertifications).omit({ id: true });
+export const insertCollegeDocumentSchema = createInsertSchema(collegeDocuments).omit({ id: true, createdAt: true });
+export const insertInternshipDocumentSchema = createInsertSchema(internshipDocuments).omit({ id: true, createdAt: true });
+export const insertInternshipFileSchema = createInsertSchema(internshipFiles).omit({ id: true, createdAt: true });
+export const insertCertificationDocumentSchema = createInsertSchema(certificationDocuments).omit({ id: true, createdAt: true });
+export const insertDocumentLinkSchema = createInsertSchema(documentLinks).omit({ id: true, createdAt: true });
 
 export type Goal = typeof goals.$inferSelect;
 export type Task = typeof tasks.$inferSelect;
@@ -132,6 +180,11 @@ export type DsaStreak = typeof dsaStreak.$inferSelect;
 export type DsTechnology = typeof dsTechnologies.$inferSelect;
 export type DsTopic = typeof dsTopics.$inferSelect;
 export type DsCertification = typeof dsCertifications.$inferSelect;
+export type CollegeDocument = typeof collegeDocuments.$inferSelect;
+export type InternshipDocument = typeof internshipDocuments.$inferSelect;
+export type InternshipFile = typeof internshipFiles.$inferSelect;
+export type CertificationDocument = typeof certificationDocuments.$inferSelect;
+export type DocumentLink = typeof documentLinks.$inferSelect;
 
 export type InsertGoal = z.infer<typeof insertGoalSchema>;
 export type InsertTask = z.infer<typeof insertTaskSchema>;
@@ -148,3 +201,8 @@ export type InsertDsaStreak = z.infer<typeof insertDsaStreakSchema>;
 export type InsertDsTechnology = z.infer<typeof insertDsTechnologySchema>;
 export type InsertDsTopic = z.infer<typeof insertDsTopicSchema>;
 export type InsertDsCertification = z.infer<typeof insertDsCertificationSchema>;
+export type InsertCollegeDocument = z.infer<typeof insertCollegeDocumentSchema>;
+export type InsertInternshipDocument = z.infer<typeof insertInternshipDocumentSchema>;
+export type InsertInternshipFile = z.infer<typeof insertInternshipFileSchema>;
+export type InsertCertificationDocument = z.infer<typeof insertCertificationDocumentSchema>;
+export type InsertDocumentLink = z.infer<typeof insertDocumentLinkSchema>;

@@ -1,0 +1,313 @@
+I want to create a Separate Section In my Sidebar create "docs" Section , In that dashboard page there should box like structure with name "College Documents" , If I Click that there should be + button to create Sub-boxes like 10th Marks,Adhaar Card..etc
+and Another document as box structure as "Internships", In that document box It should open a new page as It should look Placeholder for Internship Name and beside internship Document or Image upload, one should be for Offer Letter file upload and Another is for "Completion Certificate" file upload and beside one + button for to add other files with Name of that file and to upload that file there.Next "Certifications" box : name + Uplaod Certificate as a file and "Links" box , In that there will be separate sub boxes as for "GitHub" separate sub box, "Projects Deployed " seperate sub box. 
+
+Here Every Sub boxes should appear In new page with attractive css.
+
+
+Steps to follow :
+Add a backend folder inside your project
+
+Create a folder named:
+
+server/
+
+🧱 Step 3: Install backend dependencies
+
+In Replit or your terminal (inside the main project root):
+
+npm install express mongoose multer cors dotenv
+npm install -D @types/express @types/multer @types/node
+
+
+🧩 Step 4: Configure backend TypeScript
+
+Create server/tsconfig.json:
+
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "../dist-server"
+  },
+  "include": ["./**/*.ts"]
+}
+
+🧾 Step 5: Add .env file (in project root or Replit secrets)
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/filesdb
+PORT=4000
+
+🚀 Step 6: Create backend code
+server/index.ts
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import fileRoutes from "./routes/files.js";
+import linkRoutes from "./routes/links.js";
+
+dotenv.config();
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// MongoDB connect
+mongoose.connect(process.env.MONGO_URI as string)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(err => console.error("❌ MongoDB error:", err));
+
+app.use("/api/files", fileRoutes);
+app.use("/api/links", linkRoutes);
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+server/models/File.ts
+import mongoose, { Schema, Document } from "mongoose";
+
+export interface IFile extends Document {
+  filename: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+  createdAt: Date;
+}
+
+const FileSchema = new Schema<IFile>({
+  filename: String,
+  mimetype: String,
+  size: Number,
+  buffer: Buffer,
+  createdAt: { type: Date, default: Date.now },
+});
+
+export default mongoose.model<IFile>("File", FileSchema);
+
+server/models/Link.ts
+import mongoose, { Schema, Document } from "mongoose";
+
+export interface ILink extends Document {
+  title: string;
+  url: string;
+  description?: string;
+  createdAt: Date;
+}
+
+const LinkSchema = new Schema<ILink>({
+  title: String,
+  url: String,
+  description: String,
+  createdAt: { type: Date, default: Date.now },
+});
+
+export default mongoose.model<ILink>("Link", LinkSchema);
+
+server/routes/files.ts
+import express, { Request, Response } from "express";
+import multer from "multer";
+import File from "../models/File.js";
+
+const router = express.Router();
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+router.post("/upload", upload.single("file"), async (req: Request, res: Response) => {
+  try {
+    const { originalname, mimetype, size, buffer } = req.file!;
+    const file = new File({ filename: originalname, mimetype, size, buffer });
+    await file.save();
+    res.json({ ok: true, id: file._id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, message: "Upload failed" });
+  }
+});
+
+router.get("/", async (_req: Request, res: Response) => {
+  const files = await File.find().select("-buffer");
+  res.json(files);
+});
+
+router.get("/:id", async (req: Request, res: Response) => {
+  const file = await File.findById(req.params.id);
+  if (!file) return res.status(404).send("Not found");
+  res.set("Content-Type", file.mimetype);
+  res.send(file.buffer);
+});
+
+export default router;
+
+server/routes/links.ts
+import express, { Request, Response } from "express";
+import Link from "../models/Link.js";
+
+const router = express.Router();
+
+router.post("/", async (req: Request, res: Response) => {
+  const { title, url, description } = req.body;
+  const link = new Link({ title, url, description });
+  await link.save();
+  res.json({ ok: true });
+});
+
+router.get("/", async (_req: Request, res: Response) => {
+  const links = await Link.find().sort({ createdAt: -1 });
+  res.json(links);
+});
+
+export default router;
+
+🧠 Step 7: Add to your frontend sidebar
+
+In your Sidebar.tsx or equivalent component:
+
+import { NavLink } from "react-router-dom";
+
+<NavLink to="/assets" className="sidebar-link">
+  Assets
+</NavLink>
+
+🧩 Step 8: Create src/pages/AssetsPage.tsx
+import { useState, useEffect } from "react";
+
+export default function AssetsPage() {
+  const [tab, setTab] = useState<"images" | "documents" | "links">("images");
+  const [files, setFiles] = useState<any[]>([]);
+  const [links, setLinks] = useState<any[]>([]);
+  const [file, setFile] = useState<File | null>(null);
+  const [link, setLink] = useState({ title: "", url: "" });
+
+  async function loadFiles() {
+    const res = await fetch("/api/files");
+    setFiles(await res.json());
+  }
+
+  async function loadLinks() {
+    const res = await fetch("/api/links");
+    setLinks(await res.json());
+  }
+
+  useEffect(() => {
+    loadFiles();
+    loadLinks();
+  }, []);
+
+  async function uploadFile(e: React.FormEvent) {
+    e.preventDefault();
+    if (!file) return;
+    const fd = new FormData();
+    fd.append("file", file);
+    await fetch("/api/files/upload", { method: "POST", body: fd });
+    setFile(null);
+    loadFiles();
+  }
+
+  async function addLink(e: React.FormEvent) {
+    e.preventDefault();
+    await fetch("/api/links", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(link),
+    });
+    setLink({ title: "", url: "" });
+    loadLinks();
+  }
+
+  return (
+    <div className="p-4">
+      <h2>Assets</h2>
+      <div>
+        <button onClick={() => setTab("images")}>Images</button>
+        <button onClick={() => setTab("documents")}>Documents</button>
+        <button onClick={() => setTab("links")}>Links</button>
+      </div>
+
+      {tab !== "links" && (
+        <form onSubmit={uploadFile}>
+          <input type="file" onChange={e => setFile(e.target.files?.[0] || null)} />
+          <button type="submit">Upload</button>
+        </form>
+      )}
+
+      {tab === "links" && (
+        <form onSubmit={addLink}>
+          <input
+            placeholder="Title"
+            value={link.title}
+            onChange={e => setLink({ ...link, title: e.target.value })}
+          />
+          <input
+            placeholder="URL"
+            value={link.url}
+            onChange={e => setLink({ ...link, url: e.target.value })}
+          />
+          <button type="submit">Add</button>
+        </form>
+      )}
+
+      <ul>
+        {tab === "links"
+          ? links.map(l => (
+              <li key={l._id}>
+                <a href={l.url} target="_blank" rel="noreferrer">
+                  {l.title}
+                </a>
+              </li>
+            ))
+          : files.map(f => (
+              <li key={f._id}>
+                <a href={`/api/files/${f._id}`} target="_blank" rel="noreferrer">
+                  {f.filename}
+                </a>
+              </li>
+            ))}
+      </ul>
+    </div>
+  );
+}
+
+🧩 Step 9: Add route in your router
+
+In your App.tsx (or Router.tsx):
+
+import AssetsPage from "./pages/AssetsPage";
+// ...
+<Route path="/assets" element={<AssetsPage />} />
+
+⚡ Step 10: Run on Replit
+
+In Replit:
+
+Add secret MONGO_URI with your MongoDB Atlas connection string.
+
+Set start script in package.json:
+
+"scripts": {
+  "start": "ts-node server/index.ts"
+}
+
+
+Run → Open the web preview →
+Go to /assets in your app → Try uploading an image, PDF, or adding a link.
+
+✅ Done — you now have a fully working “Assets” section in your existing TypeScript dashboard, connected to MongoDB, running on Replit.
+
+
+My connection string
+mongodb+srv://naradashishivaram25_db_user:shiva%402525@cluster1.3zgnpc5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1
+
+🧩 Adding your database name
+
+You can also specify your database (for example, filesdb) like this:
+
+mongodb+srv://naradashishivaram25_db_user:shiva%402525@cluster1.3zgnpc5.mongodb.net/filesdb?retryWrites=true&w=majority&appName=Cluster1
+
+🗂️ What to put in Replit .env file
+
+In your Replit .env file, write:
+
+MONGO_URI="mongodb+srv://naradashishivaram25_db_user:shiva%402525@cluster1.3zgnpc5.mongodb.net/filesdb?retryWrites=true&w=majority&appName=Cluster1"

@@ -18,6 +18,11 @@ import WellnessPage from "@/pages/wellness-page";
 import CommunicationPage from "@/pages/communication-page";
 import EntertainmentPage from "@/pages/entertainment-page";
 import DataSciencePage from "@/pages/data-science-page";
+import DocsPage from "@/pages/docs-page";
+import CollegeDocumentsPage from "@/pages/college-documents-page";
+import InternshipsPage from "@/pages/internships-page";
+import CertificationsPage from "@/pages/certifications-page";
+import LinksPage from "@/pages/links-page";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -32,6 +37,11 @@ function Router() {
       <Route path="/communication" component={CommunicationPage} />
       <Route path="/entertainment" component={EntertainmentPage} />
       <Route path="/data-science" component={DataSciencePage} />
+      <Route path="/docs" component={DocsPage} />
+      <Route path="/docs/college" component={CollegeDocumentsPage} />
+      <Route path="/docs/internships" component={InternshipsPage} />
+      <Route path="/docs/certifications" component={CertificationsPage} />
+      <Route path="/docs/links" component={LinksPage} />
       <Route component={NotFound} />
     </Switch>
   );

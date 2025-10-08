@@ -19,6 +19,7 @@ import {
   MessageCircle,
   Film,
   Brain,
+  FileText,
 } from "lucide-react";
 
 const menuItems = [
@@ -31,6 +32,7 @@ const menuItems = [
   { title: "Communication", url: "/communication", icon: MessageCircle },
   { title: "Entertainment", url: "/entertainment", icon: Film },
   { title: "Data Science", url: "/data-science", icon: Brain },
+  { title: "Docs", url: "/docs", icon: FileText },
 ];
 
 export function AppSidebar() {
