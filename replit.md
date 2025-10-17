@@ -6,13 +6,20 @@ This is a personal wellness and productivity tracking application that helps use
 
 ## Recent Changes
 
+**October 17, 2025** - Upgraded file storage to Cloudinary for production deployment:
+- Integrated Cloudinary for cloud-based file and image storage
+- Replaced base64 database storage with Cloudinary URLs and public IDs
+- Implemented proper Cloudinary asset deletion on record removal (no storage leaks)
+- Added file upload security: 10MB size limit, MIME type validation
+- Environment variable validation at startup for Cloudinary credentials
+- Production-ready deployment for Vercel/Render with persistent file storage
+
 **October 8, 2025** - Added comprehensive College Documents management system with:
 - Main Docs dashboard with sections for College Documents, Internships, Certifications, and Links
 - College Documents page with category-based organization (10th Marks, Aadhaar Card, etc.)
 - Internships page with multi-file upload support (offer letters, completion certificates, other files)
 - Certifications page for professional certificates
 - Links page for important document-related URLs
-- File upload/download functionality with base64 encoding
 - Full CRUD operations for all document types
 
 ## User Preferences
@@ -134,6 +141,12 @@ Preferred communication style: Simple, everyday language.
 - **@neondatabase/serverless**: PostgreSQL client optimized for serverless environments
 - **Drizzle ORM**: Type-safe ORM with zod schema integration
 - **drizzle-zod**: Integration between Drizzle and Zod for runtime validation
+
+### File Storage & Upload
+- **Cloudinary**: Cloud-based file and image storage service
+- **Multer**: File upload middleware with size/type validation (10MB limit)
+- Supported file types: Images (JPEG, PNG, GIF, WebP), PDF, Word, Excel
+- Files stored with secure URLs and public IDs for proper deletion management
 
 ### Utility Libraries
 - **date-fns**: Date manipulation and formatting
