@@ -104,9 +104,9 @@ export const dsCertifications = pgTable("ds_certifications", {
 // College Documents tables
 export const collegeDocuments = pgTable("college_documents", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  category: text("category").notNull(), // e.g., "10th Marks", "Aadhaar Card"
+  category: text("category").notNull(),
   fileName: text("file_name").notNull(),
-  fileData: text("file_data").notNull(), // base64 encoded file
+  fileUrl: text("file_url").notNull(),
   mimeType: text("mime_type").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -120,9 +120,9 @@ export const internshipDocuments = pgTable("internship_documents", {
 export const internshipFiles = pgTable("internship_files", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   internshipId: varchar("internship_id").notNull().references(() => internshipDocuments.id, { onDelete: 'cascade' }),
-  fileType: text("file_type").notNull(), // "offer_letter", "completion_certificate", "other"
+  fileType: text("file_type").notNull(),
   fileName: text("file_name").notNull(),
-  fileData: text("file_data").notNull(), // base64 encoded file
+  fileUrl: text("file_url").notNull(),
   mimeType: text("mime_type").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -131,7 +131,7 @@ export const certificationDocuments = pgTable("certification_documents", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
   fileName: text("file_name").notNull(),
-  fileData: text("file_data").notNull(), // base64 encoded file
+  fileUrl: text("file_url").notNull(),
   mimeType: text("mime_type").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

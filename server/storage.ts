@@ -56,7 +56,6 @@ export class MemStorage implements IStorage {
     this.documentLinks = new Map();
   }
 
-  // College Documents
   async createCollegeDocument(insertDoc: InsertCollegeDocument): Promise<CollegeDocument> {
     const id = randomUUID();
     const doc: CollegeDocument = { ...insertDoc, id, createdAt: new Date() };
@@ -101,7 +100,6 @@ export class MemStorage implements IStorage {
     this.internshipDocuments.delete(id);
   }
 
-  // Internship Files
   async createInternshipFile(insertFile: InsertInternshipFile): Promise<InternshipFile> {
     const id = randomUUID();
     const file: InternshipFile = { ...insertFile, id, createdAt: new Date() };
@@ -117,7 +115,6 @@ export class MemStorage implements IStorage {
     this.internshipFiles.delete(id);
   }
 
-  // Certification Documents
   async createCertificationDocument(insertDoc: InsertCertificationDocument): Promise<CertificationDocument> {
     const id = randomUUID();
     const doc: CertificationDocument = { ...insertDoc, id, createdAt: new Date() };
