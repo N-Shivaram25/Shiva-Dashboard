@@ -28,6 +28,7 @@ export interface IStorage {
   // Internship Files
   createInternshipFile(file: InsertInternshipFile): Promise<InternshipFile>;
   getInternshipFiles(internshipId: string): Promise<InternshipFile[]>;
+  getInternshipFileById(id: string): Promise<InternshipFile | undefined>;
   deleteInternshipFile(id: string): Promise<void>;
   
   // Certification Documents
@@ -109,6 +110,10 @@ export class MemStorage implements IStorage {
 
   async getInternshipFiles(internshipId: string): Promise<InternshipFile[]> {
     return Array.from(this.internshipFiles.values()).filter(file => file.internshipId === internshipId);
+  }
+
+  async getInternshipFileById(id: string): Promise<InternshipFile | undefined> {
+    return this.internshipFiles.get(id);
   }
 
   async deleteInternshipFile(id: string): Promise<void> {

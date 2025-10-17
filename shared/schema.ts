@@ -107,6 +107,7 @@ export const collegeDocuments = pgTable("college_documents", {
   category: text("category").notNull(),
   fileName: text("file_name").notNull(),
   fileUrl: text("file_url").notNull(),
+  publicId: text("public_id").notNull(),
   mimeType: text("mime_type").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -123,6 +124,7 @@ export const internshipFiles = pgTable("internship_files", {
   fileType: text("file_type").notNull(),
   fileName: text("file_name").notNull(),
   fileUrl: text("file_url").notNull(),
+  publicId: text("public_id").notNull(),
   mimeType: text("mime_type").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
@@ -132,6 +134,7 @@ export const certificationDocuments = pgTable("certification_documents", {
   name: text("name").notNull(),
   fileName: text("file_name").notNull(),
   fileUrl: text("file_url").notNull(),
+  publicId: text("public_id").notNull(),
   mimeType: text("mime_type").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
